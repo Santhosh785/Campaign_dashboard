@@ -1,15 +1,18 @@
 import { Router } from 'express';
 import supabase from '../db/supabase.js';
+import { formatPhone } from '../utils/formatPhone.js';
 
 const router = Router();
 
 router.post('/', async (req, res) => {
-  const phone = req.body?.phone;
+  const rawPhone = req.body?.phone;
 
   // Filter bots
-  if (!phone || phone === '--sanitized--' || phone.includes('{{')) {
+  if (!rawPhone || rawPhone === '--sanitized--' || rawPhone.includes('{{')) {
     return res.sendStatus(200);
   }
+
+  const phone = formatPhone(rawPhone);
 
   const {
     name, event_type,
@@ -38,8 +41,8 @@ router.post('/', async (req, res) => {
     console.log('─────────────────────────────────────');
   }
 
-  // Save to Supabase
-  const { error } = await supabase.from('student_events').insert({
+  // Save to Supabase — upsert by phone, no duplicate rows
+  const { error } = await supabase.from('student_events').upsert({
     name,
     phone,
     event_type,
@@ -49,7 +52,7 @@ router.post('/', async (req, res) => {
     refresh_count,
     shared,
     timestamp,
-  });
+  }, { onConflict: 'phone' });
 
   if (error) {
     console.error('[Supabase] Insert failed:', error.message);
