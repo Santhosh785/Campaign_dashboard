@@ -105,6 +105,18 @@ function applyStudentFilters() {
     return matchSearch && matchEvent && matchShared;
   });
 
+  // Update stats based on filtered results
+  const isFiltered = search || event || shared;
+  document.getElementById('stats').innerHTML = `
+    <div class="stat-card">
+      <div class="label">${isFiltered ? 'Filtered Results' : 'Total Students'}</div>
+      <div class="value">${filtered.length}</div>
+    </div>
+    <div class="stat-card"><div class="label">Shared</div><div class="value">${filtered.filter(r => r.shared).length}</div></div>
+    <div class="stat-card"><div class="label">Avg Scroll Depth</div><div class="value">${filtered.length ? Math.round(filtered.reduce((a, r) => a + (r.scroll_depth_percent || 0), 0) / filtered.length) : 0}%</div></div>
+    <div class="stat-card"><div class="label">Avg Time Spent</div><div class="value">${filtered.length ? formatTime(Math.round(filtered.reduce((a, r) => a + (r.time_spent_seconds || 0), 0) / filtered.length)) : '0m 0s'}</div></div>
+  `;
+
   renderStudents(filtered);
 }
 
@@ -120,6 +132,18 @@ function applyShopifyFilters() {
     const matchEvent = !event || r.event_type === event;
     return matchSearch && matchEvent;
   });
+
+  // Update stats based on filtered results
+  const isFiltered = search || event;
+  document.getElementById('stats').innerHTML = `
+    <div class="stat-card">
+      <div class="label">${isFiltered ? 'Filtered Results' : 'Total Customers'}</div>
+      <div class="value">${filtered.length}</div>
+    </div>
+    <div class="stat-card"><div class="label">Products Viewed</div><div class="value">${filtered.filter(r => r.event_type === 'product_viewed').length}</div></div>
+    <div class="stat-card"><div class="label">Added to Cart</div><div class="value">${filtered.filter(r => r.event_type === 'product_added_to_cart').length}</div></div>
+    <div class="stat-card"><div class="label">Purchased</div><div class="value">${filtered.filter(r => r.event_type === 'checkout_completed').length}</div></div>
+  `;
 
   renderShopify(filtered);
 }
