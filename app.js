@@ -8,6 +8,7 @@ import productViewed from './routes/shopify/productViewed.js';
 import productAddedToCart from './routes/shopify/productAddedToCart.js';
 import checkoutStarted from './routes/shopify/checkoutStarted.js';
 import checkoutCompleted from './routes/shopify/checkoutCompleted.js';
+import productRemovedFromCart from './routes/shopify/productRemovedFromCart.js';
 import dashboardRoute from './routes/dashboard.js';
 
 dotenv.config();
@@ -26,6 +27,7 @@ app.use('/shopify-events/product-viewed', productViewed);
 app.use('/shopify-events/product-added-to-cart', productAddedToCart);
 app.use('/shopify-events/checkout-started', checkoutStarted);
 app.use('/shopify-events/checkout-completed', checkoutCompleted);
+app.use('/shopify-events/product-removed-from-cart', productRemovedFromCart);
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend', 'index.html'));

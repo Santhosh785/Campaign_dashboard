@@ -31,10 +31,30 @@ router.post('/', async (req, res) => {
     shared, timestamp
   } = req.body;
 
+  // Check if this phone has already shared — if so, this is a shared visitor
+  if (event_type === 'page_open') {
+    const { data: existing } = await supabase
+      .from('student_events')
+      .select('shared, shared_views')
+      .eq('phone', phone)
+      .single();
+
+    if (existing?.shared === true) {
+      // Shared visitor — just increment the counter, don't touch original data
+      const newCount = (existing.shared_views || 0) + 1;
+      await supabase
+        .from('student_events')
+        .update({ shared_views: newCount })
+        .eq('phone', phone);
+
+      console.log(`[TRACK] Shared visitor on ${phone} — shared_views: ${newCount}`);
+      return res.sendStatus(200);
+    }
+  }
+
   const mins = Math.floor(time_spent_seconds / 60);
   const secs = time_spent_seconds % 60;
 
-  // Log to console
   if (event_type === 'scroll_update') {
     console.log(`[SCROLL] ${name} (${phone}) — depth: ${scroll_depth_percent}% | scrolls: ${scroll_count} | time: ${mins}m ${secs}s`);
   } else {
@@ -51,7 +71,7 @@ router.post('/', async (req, res) => {
     console.log('─────────────────────────────────────');
   }
 
-  // Save to Supabase — upsert by phone, no duplicate rows
+  // Save to Supabase — upsert by phone
   const { error } = await supabase.from('student_events').upsert({
     name,
     phone,
@@ -64,9 +84,7 @@ router.post('/', async (req, res) => {
     timestamp,
   }, { onConflict: 'phone' });
 
-  if (error) {
-    console.error('[Supabase] Insert failed:', error.message);
-  }
+  if (error) console.error('[Supabase] Insert failed:', error.message);
 
   // On page_open, mark contact as guide viewed in Bigin
   if (event_type === 'page_open') {
