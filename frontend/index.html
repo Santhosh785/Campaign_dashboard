@@ -26,6 +26,26 @@
         <h2>Student Events</h2>
         <button onclick="loadData()">Refresh</button>
       </div>
+
+      <!-- Filters -->
+      <div class="filters">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="students-search" placeholder="Search name or phone..." oninput="applyStudentFilters()" />
+        </div>
+        <select id="students-event-filter" onchange="applyStudentFilters()">
+          <option value="">All Events</option>
+          <option value="page_open">Page Open</option>
+          <option value="scroll_update">Scrolling</option>
+          <option value="page_close">Page Close</option>
+        </select>
+        <select id="students-shared-filter" onchange="applyStudentFilters()">
+          <option value="">All</option>
+          <option value="yes">Shared</option>
+          <option value="no">Not Shared</option>
+        </select>
+      </div>
+
       <div class="table-wrap">
         <table id="students-table">
           <thead>
@@ -38,6 +58,7 @@
               <th>Scroll Count</th>
               <th>Refreshes</th>
               <th>Shared</th>
+              <th>Shared Views</th>
               <th>Timestamp</th>
               <th></th>
             </tr>
@@ -53,6 +74,23 @@
         <h2>Shopify Events</h2>
         <button onclick="loadData()">Refresh</button>
       </div>
+
+      <!-- Filters -->
+      <div class="filters">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="shopify-search" placeholder="Search name, phone or product..." oninput="applyShopifyFilters()" />
+        </div>
+        <select id="shopify-event-filter" onchange="applyShopifyFilters()">
+          <option value="">All Events</option>
+          <option value="product_viewed">Viewed</option>
+          <option value="product_added_to_cart">Added to Cart</option>
+          <option value="product_removed_from_cart">Removed from Cart</option>
+          <option value="checkout_started">Checkout</option>
+          <option value="checkout_completed">Purchased</option>
+        </select>
+      </div>
+
       <div class="table-wrap">
         <table id="shopify-table">
           <thead>

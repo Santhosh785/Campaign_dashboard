@@ -98,6 +98,55 @@ nav { display: flex; flex-direction: column; gap: 6px; }
 .tab { display: none; }
 .tab.active { display: block; }
 
+/* Filters */
+.filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  background: #1a1d2e;
+  border: 1px solid #2d3148;
+  border-radius: 8px;
+  padding: 0 12px;
+  gap: 8px;
+  flex: 1;
+  min-width: 200px;
+}
+.search-box svg {
+  width: 16px;
+  height: 16px;
+  color: #6c7499;
+  flex-shrink: 0;
+}
+.search-box input {
+  background: none;
+  border: none;
+  outline: none;
+  color: #e2e8f0;
+  font-size: 13px;
+  padding: 10px 0;
+  width: 100%;
+}
+.search-box input::placeholder { color: #4a5080; }
+
+.filters select {
+  background: #1a1d2e;
+  border: 1px solid #2d3148;
+  border-radius: 8px;
+  color: #c8cee8;
+  padding: 10px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  outline: none;
+}
+.filters select:focus { border-color: #3b41d4; }
+
 .table-header {
   display: flex;
   justify-content: space-between;
