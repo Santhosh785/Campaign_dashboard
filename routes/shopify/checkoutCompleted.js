@@ -8,6 +8,7 @@ router.post('/', async (req, res) => {
   const { eventType, data } = req.body;
   const checkout = data?.checkout;
   const phone = formatPhone(req.body.phone);
+  if (!phone) return res.sendStatus(200);
 
   console.log('[Shopify] checkout_completed — order:', checkout?.order?.id, '|', phone);
 

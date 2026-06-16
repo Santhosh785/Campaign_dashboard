@@ -9,6 +9,7 @@ router.post('/', async (req, res) => {
   const product = data?.productVariant?.product;
   const variant = data?.productVariant;
   const phone = formatPhone(req.body.phone);
+  if (!phone) return res.sendStatus(200);
 
   console.log('[Shopify] product_viewed:', product?.title, '|', phone);
 

@@ -8,6 +8,7 @@ router.post('/', async (req, res) => {
   const { eventType, data } = req.body;
   const product = data?.cartLine?.merchandise?.product;
   const phone = formatPhone(req.body.phone);
+  if (!phone) return res.sendStatus(200);
 
   console.log('[Shopify] product_removed_from_cart:', product?.title, '|', phone);
 

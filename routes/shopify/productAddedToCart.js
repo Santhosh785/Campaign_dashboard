@@ -9,6 +9,7 @@ router.post('/', async (req, res) => {
   const product = data?.cartLine?.merchandise?.product;
   const variant = data?.cartLine?.merchandise;
   const phone = formatPhone(req.body.phone);
+  if (!phone) return res.sendStatus(200);
 
   console.log('[Shopify] product_added_to_cart:', product?.title, '| Price:', variant?.price?.amount, '|', phone);
 
