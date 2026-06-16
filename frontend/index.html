@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FOCAS Analytics Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="sidebar">
+    <div class="logo">FOCAS<span>Analytics</span></div>
+    <nav>
+      <button class="nav-btn active" onclick="switchTab('students')">Students</button>
+      <button class="nav-btn" onclick="switchTab('shopify')">Shopify Events</button>
+    </nav>
+    <div class="refresh-info">Auto-refresh: <span id="countdown">30</span>s</div>
+  </div>
+
+  <div class="main">
+    <!-- Stats -->
+    <div class="stats" id="stats"></div>
+
+    <!-- Students Tab -->
+    <div id="tab-students" class="tab active">
+      <div class="table-header">
+        <h2>Student Events</h2>
+        <button onclick="loadData()">Refresh</button>
+      </div>
+      <div class="table-wrap">
+        <table id="students-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Last Event</th>
+              <th>Time Spent</th>
+              <th>Scroll Depth</th>
+              <th>Scroll Count</th>
+              <th>Refreshes</th>
+              <th>Shared</th>
+              <th>Timestamp</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="students-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Shopify Tab -->
+    <div id="tab-shopify" class="tab">
+      <div class="table-header">
+        <h2>Shopify Events</h2>
+        <button onclick="loadData()">Refresh</button>
+      </div>
+      <div class="table-wrap">
+        <table id="shopify-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Last Event</th>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Cart Items</th>
+              <th>Page URL</th>
+              <th>Date</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="shopify-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,14 +1,24 @@
 import { Router } from 'express';
 import supabase from '../db/supabase.js';
 import { formatPhone } from '../utils/formatPhone.js';
+import { findBiginContactByPhone, updateBiginContactField } from '../utils/zoho.js';
+import { sendSlackNotification } from '../utils/slack.js';
 
 const router = Router();
 
 router.post('/', async (req, res) => {
+  console.log('[TRACK] Incoming body:', JSON.stringify(req.body));
+
   const rawPhone = req.body?.phone;
 
-  // Filter bots
+  // Filter bots and invalid numbers
   if (!rawPhone || rawPhone === '--sanitized--' || rawPhone.includes('{{')) {
+    console.log('[TRACK] Filtered — invalid phone:', rawPhone);
+    return res.sendStatus(200);
+  }
+  const digits = rawPhone.replace(/\D/g, '');
+  if (digits.length < 10) {
+    console.log('[TRACK] Filtered — too short:', rawPhone);
     return res.sendStatus(200);
   }
 
@@ -56,6 +66,22 @@ router.post('/', async (req, res) => {
 
   if (error) {
     console.error('[Supabase] Insert failed:', error.message);
+  }
+
+  // On page_open, mark contact as guide viewed in Bigin
+  if (event_type === 'page_open') {
+    try {
+      const contactId = await findBiginContactByPhone(phone);
+      if (contactId) {
+        await updateBiginContactField(contactId, { Potential: 'Guide Viewed' });
+        console.log(`[Bigin] ✓ Potential updated to "Guide Viewed" for ${phone} (ID: ${contactId})`);
+        await sendSlackNotification(`📄 *Guide Viewed*\n*Name:* ${name || 'Unknown'}\n*Phone:* ${phone}`);
+      } else {
+        console.log('[Bigin] No contact found for', phone);
+      }
+    } catch (err) {
+      console.error('[Bigin] Error:', err.message);
+    }
   }
 
   res.sendStatus(200);
